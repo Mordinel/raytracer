@@ -3,7 +3,8 @@
 #include <fstream>
 #include <string>
 
-#include "vec3.h"
+#include "ray.h"
+#include "color.h"
 
 /**
  * takes path and content strings,
@@ -22,6 +23,13 @@ int writeFile(std::string& path, std::string& content)
     return 1;
 }
 
+Vec3 RayColor(const Ray& r)
+{
+    Vec3 UnitDirection = UnitVector(r.Direction());
+    float t = 0.5f * (UnitDirection.y() + 1.0f);
+    return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
+}
+
 int main(int argc, char* argv[])
 {
     // args
@@ -35,22 +43,34 @@ int main(int argc, char* argv[])
 
     std::ostringstream contentStream;
 
-    int nx = 200;
-    int ny = 100;
+    // image
+    const float aspectRatio = 16.0f / 10.0f;
+    const int width = 1920;
+    const int height = static_cast<int>(width / aspectRatio);
 
-    contentStream << "P3\n" << nx << " " << ny << "\n255\n";
+    // camera
+    float vpHeight = 2.0f;
+    float vpWidth = aspectRatio * vpHeight;
+    float focalLength = 1.0f;
 
-    for (int j = ny - 1; j >= 0; j--) {
-        for (int i = 0; i < nx; i++) {
-            Vec3 col(float(i) / float(nx), float(j) / float(ny), 0.2f);
+    contentStream << "P3\n" << width << " " << height << "\n255\n";
 
-            int ir = int(255.99 * col[0]);
-            int ig = int(255.99 * col[1]);
-            int ib = int(255.99 * col[2]);
+    Point3 origin(0.0f, 0.0f, 0.0f);
+    Vec3 horizontal(vpWidth, 0.0f, 0.0f);
+    Vec3 vertical(0.0f, vpHeight, 0.0f);
+    Point3 lowerLeftCorner = origin - horizontal / 2 - vertical - Vec3(0.0f, 0.0f, focalLength);
 
-            contentStream << ir << " " << ig << " " << ib << "\n";
+    for (int j = height - 1; j >= 0; j--) {
+        std::cout << "\rScanlines remaining: " << j << " " << std::flush;
+        for (int i = 0; i < width; i++) {
+            float u = float(i) / float(width - 1);
+            float v = float(j) / float(height - 1);
+            Ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
+            Color col = RayColor(r);
+            WriteColor(contentStream, col);
         }
     }
+    std::cout << "\r" << std::endl;
 
     outContent = contentStream.str();
 

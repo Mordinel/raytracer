@@ -7,14 +7,17 @@ class Ray {
     private:
 
     public:
-        Vec3 A;
-        Vec3 B;
+        Point3 origin;
+        Vec3 direction;
 
         Ray() {}
-        Ray(const Vec3& a, const Vec3& b) : A(a), B(b) {}
-        Vec3 Origin() const { return A; }
-        Vec3 Direction() const { return B; }
-        Vec3 PointAtParameter(float t) const { return A + t * B; }
+        Ray(const Point3& origin, const Vec3& direction) : origin(origin), direction(direction) {}
+        Point3 Origin() const { return origin; }
+        Vec3 Direction() const { return direction; }
+        Vec3 At(float t) const 
+        {
+            return origin + t * direction;
+        }
 
 };
 
