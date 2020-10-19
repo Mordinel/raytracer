@@ -4,11 +4,21 @@
 #include <iostream>
 #include "vec3.h"
 
-void WriteColor(std::ostream& os, Color pixelColor)
+void WriteColor(std::ostream& os, Color pixelColor, int samplesPerPixel)
 {
-    os << static_cast<int>(255.999 * pixelColor.x()) << " "
-       << static_cast<int>(255.999 * pixelColor.y()) << " "
-       << static_cast<int>(255.999 * pixelColor.z()) << "\n";
+    float r = pixelColor.x();
+    float g = pixelColor.y();
+    float b = pixelColor.z();
+
+    float scale = 1.0f / samplesPerPixel;
+
+    r *= scale;
+    g *= scale;
+    b *= scale;
+
+    os << static_cast<int>(256 * Clamp(r, 0.0f, 0.999)) << " "
+       << static_cast<int>(256 * Clamp(g, 0.0f, 0.999)) << " "
+       << static_cast<int>(256 * Clamp(b, 0.0f, 0.999)) << "\n";
 }
 
 #endif
