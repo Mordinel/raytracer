@@ -27,11 +27,17 @@ int WriteFile(std::string& path, std::string& content)
     return 1;
 }
 
-Color RayColor(const Ray& r, const Hittable& world)
+Color RayColor(const Ray& r, const Hittable& world, int depth)
 {
     HitRecord rec;
+
+    if (depth <= 0) {
+        return Color(0.0f, 0.0f, 0.0f);
+    }
+    
     if (world.Hit(r, 0, infinity, rec)) {
-        return 0.5f * (rec.normal + Color(1.0f, 1.0f, 1.0f));
+        Point3 target = rec.p + rec.normal + RandomInUnitSphere();
+        return 0.5f * RayColor(Ray(rec.p, target - rec.p), world, depth - 1);
     }
 
     Vec3 UnitDirection = UnitVector(r.Direction());
@@ -56,7 +62,8 @@ int main(int argc, char* argv[])
     const float aspectRatio = 16.0f / 9.0f;
     const int width = 800;
     const int height = static_cast<int>(width / aspectRatio);
-    const int samplesPerPixel = 50;
+    const int samplesPerPixel = 8;
+    const int maxDepth = 50;
 
     std::cout << "Resolution: " << width << "x" << height << std::endl;
     std::cout << "MSAA Per-Pixel Samples: " << samplesPerPixel << std::endl;
@@ -78,7 +85,7 @@ int main(int argc, char* argv[])
                 float u = (i + RandomFloat()) / (width - 1);
                 float v = (j + RandomFloat()) / (height - 1);
                 Ray r = cam.GetRay(u, v);
-                pixelColor += RayColor(r, world);
+                pixelColor += RayColor(r, world, maxDepth);
             }
             WriteColor(contentStream, pixelColor, samplesPerPixel);
         }

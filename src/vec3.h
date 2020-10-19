@@ -56,6 +56,16 @@ class Vec3 {
                 this->e[2] * this->e[2];
         }
 
+        inline static Vec3 Random()
+        {
+            return Vec3(RandomFloat(), RandomFloat(), RandomFloat());
+        }
+
+        inline static Vec3 Random(float min, float max)
+        {
+            return Vec3(RandomFloat(min, max), RandomFloat(min, max), RandomFloat(min, max));
+        }
+
 };
 
 using Point3 = Vec3;
@@ -127,6 +137,17 @@ inline Vec3 cross(const Vec3& v1, const Vec3& v2)
 inline Vec3 UnitVector(Vec3 v)
 {
     return v / v.Length();
+}
+
+Vec3 RandomInUnitSphere()
+{
+    for (;;) {
+        Vec3 p = Vec3::Random(-1,1);
+        if (p.LengthSquared() >= 1) {
+            continue;
+        }
+        return p;
+    }
 }
 
 #endif
