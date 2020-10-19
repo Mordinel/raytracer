@@ -63,8 +63,8 @@ int main(int argc, char* argv[])
     std::ostringstream contentStream;
 
     // image
-    const float aspectRatio = 16.0f / 10.0f;
-    const int width = 1920;
+    const float aspectRatio = 16.0f / 9.0f;
+    const int width = 800;
     const int height = static_cast<int>(width / aspectRatio);
 
     // camera
