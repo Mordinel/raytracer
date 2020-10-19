@@ -1,15 +1,16 @@
 SOURCES=src/*.cpp
 CFLAGS=-std=c++20 -g
+OUTFILE=render
 
 .PHONY: clean
 
 all: ${SOURCES}
-	clang++ ${CFLAGS} ${SOURCES} -o render
+	clang++ ${CFLAGS} ${SOURCES} -o ${OUTFILE}
 
-run: raytracer
-	./render a.ppm
+run: ${OUTFILE}
+	./${OUTFILE} a.ppm
 
 clean:
-	rm -f render 
+	rm -f ${OUTFILE}
 	rm -f *.ppm
 
