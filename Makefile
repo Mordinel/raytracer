@@ -4,12 +4,12 @@ CFLAGS=-std=c++20 -g
 .PHONY: clean
 
 all: ${SOURCES}
-	clang++ ${CFLAGS} ${SOURCES} -o raytracer
+	clang++ ${CFLAGS} ${SOURCES} -o render
 
 run: raytracer
-	./raytracer a.ppm
+	./render a.ppm
 
 clean:
-	rm -f raytracer
+	rm -f render 
 	rm -f *.ppm
 
