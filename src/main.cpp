@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 
-#include "rtweekend.h"
+#include "rt.h"
 #include "ray.h"
 #include "color.h"
 #include "hittablelist.h"
