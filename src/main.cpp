@@ -3,8 +3,11 @@
 #include <fstream>
 #include <string>
 
+#include "rtweekend.h"
 #include "ray.h"
 #include "color.h"
+#include "hittablelist.h"
+#include "sphere.h"
 
 /**
  * takes path and content strings,
@@ -23,29 +26,15 @@ int writeFile(std::string& path, std::string& content)
     return 1;
 }
 
-float hitSphere(const Point3& center, float radius, const Ray& r)
+Color rayColor(const Ray& r, const Hittable& world)
 {
-    Vec3 oc = r.Origin() - center;
-    float a = r.Direction().LengthSquared();
-    float halfb = dot(oc, r.Direction());
-    float c = oc.LengthSquared() - radius * radius;
-    float discriminant = halfb * halfb - a * c;
-    if (discriminant < 0) {
-        return -1.0f;
-    } else {
-        return (-halfb - std::sqrt(discriminant)) / a;
+    HitRecord rec;
+    if (world.Hit(r, 0, infinity, rec)) {
+        return 0.5f * (rec.normal + Color(1.0f, 1.0f, 1.0f));
     }
-}
 
-Color rayColor(const Ray& r)
-{
-    float t = hitSphere(Point3(0.0f, 0.0f, -1.0f), 0.5f, r);
-    if (t > 0.0f) {
-        Vec3 N = UnitVector(r.At(t) - Vec3(0.0f, 0.0f, -1.0f));
-        return 0.5f * Color(N.x() + 1, N.y() + 1, N.z() + 1);
-    }
     Vec3 UnitDirection = UnitVector(r.Direction());
-    t = 0.5f * (UnitDirection.y() + 1.0f);
+    float t = 0.5f * (UnitDirection.y() + 1.0f);
     return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
 }
 
@@ -67,6 +56,10 @@ int main(int argc, char* argv[])
     const int width = 800;
     const int height = static_cast<int>(width / aspectRatio);
 
+    HittableList world;
+    world.Add(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f));
+    world.Add(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f));
+
     // camera
     float vpHeight = 2.0f;
     float vpWidth = aspectRatio * vpHeight;
@@ -85,7 +78,7 @@ int main(int argc, char* argv[])
             float u = float(i) / float(width - 1);
             float v = float(j) / float(height - 1);
             Ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
-            Color col = rayColor(r);
+            Color col = rayColor(r, world);
             WriteColor(contentStream, col);
         }
     }
