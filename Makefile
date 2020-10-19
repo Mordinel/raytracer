@@ -1,5 +1,5 @@
 SOURCES=src/*.cpp
-CFLAGS=-std=c++20 -g -Wall
+CFLAGS=-std=c++20 -g
 
 .PHONY: clean
 
