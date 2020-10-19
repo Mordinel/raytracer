@@ -58,6 +58,9 @@ int main(int argc, char* argv[])
     const int height = static_cast<int>(width / aspectRatio);
     const int samplesPerPixel = 50;
 
+    std::cout << "Resolution: " << width << "x" << height << std::endl;
+    std::cout << "MSAA Per-Pixel Samples: " << samplesPerPixel << std::endl;
+
     HittableList world;
     world.Add(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f));
     world.Add(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f));
@@ -68,7 +71,7 @@ int main(int argc, char* argv[])
     contentStream << "P3\n" << width << " " << height << "\n255\n";
 
     for (int j = height - 1; j >= 0; j--) {
-        std::cout << "\rScanlines remaining: " << j << " " << std::flush;
+        std::cout << "\rRender Progress: " << 100 - int(float(j) / float(height) * 100) << "%" << std::flush;
         for (int i = 0; i < width; i++) {
             Color pixelColor(0, 0 ,0);
             for (int s = 0; s < samplesPerPixel; s++) {
