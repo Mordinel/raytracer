@@ -10,9 +10,8 @@ class Camera {
         Vec3 horizontal;
         Vec3 vertical;
 
-        Camera()
+        Camera(float aspectRatio)
         {
-            float aspectRatio = 16.0f / 9.0f;
             float vpHeight = 2.0f;
             float vpWidth = aspectRatio * vpHeight;
             float focalLength = 1.0f;

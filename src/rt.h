@@ -21,7 +21,7 @@ inline float RandomFloat() {
 }
 
 inline float RandomFloat(float min, float max) {
-    return min + (max - min) * randomFloat();
+    return min + (max - min) * RandomFloat();
 }
 
 inline float Clamp(float x, float min, float max) {
