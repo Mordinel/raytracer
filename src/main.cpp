@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
     Point3 origin(0.0f, 0.0f, 0.0f);
     Vec3 horizontal(vpWidth, 0.0f, 0.0f);
     Vec3 vertical(0.0f, vpHeight, 0.0f);
-    Point3 lowerLeftCorner = origin - horizontal / 2 - vertical - Vec3(0.0f, 0.0f, focalLength);
+    Point3 lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - Vec3(0.0f, 0.0f, focalLength);
 
     for (int j = height - 1; j >= 0; j--) {
         std::cout << "\rScanlines remaining: " << j << " " << std::flush;
