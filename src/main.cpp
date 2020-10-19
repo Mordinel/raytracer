@@ -23,23 +23,29 @@ int writeFile(std::string& path, std::string& content)
     return 1;
 }
 
-bool hitSphere(const Point3& center, float radius, const Ray& r)
+float hitSphere(const Point3& center, float radius, const Ray& r)
 {
     Vec3 oc = r.Origin() - center;
-    float a = dot(r.Direction(), r.Direction());
-    float b = 2.0 * dot(oc, r.Direction());
-    float c = dot(oc, oc) - radius * radius;
-    float discriminant = b * b - 4 * a * c;
-    return (discriminant > 0);
+    float a = r.Direction().LengthSquared();
+    float halfb = dot(oc, r.Direction());
+    float c = oc.LengthSquared() - radius * radius;
+    float discriminant = halfb * halfb - a * c;
+    if (discriminant < 0) {
+        return -1.0f;
+    } else {
+        return (-halfb - std::sqrt(discriminant)) / a;
+    }
 }
 
 Color rayColor(const Ray& r)
 {
-    if (hitSphere(Point3(0.0f, 0.0f, -1.0f), 0.5f, r)) {
-        return Color(1.0f, 0.0f, 0.0f);
+    float t = hitSphere(Point3(0.0f, 0.0f, -1.0f), 0.5f, r);
+    if (t > 0.0f) {
+        Vec3 N = UnitVector(r.At(t) - Vec3(0.0f, 0.0f, -1.0f));
+        return 0.5f * Color(N.x() + 1, N.y() + 1, N.z() + 1);
     }
     Vec3 UnitDirection = UnitVector(r.Direction());
-    float t = 0.5f * (UnitDirection.y() + 1.0f);
+    t = 0.5f * (UnitDirection.y() + 1.0f);
     return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
 }
 
