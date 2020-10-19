@@ -23,8 +23,21 @@ int writeFile(std::string& path, std::string& content)
     return 1;
 }
 
-Vec3 RayColor(const Ray& r)
+bool hitSphere(const Point3& center, float radius, const Ray& r)
 {
+    Vec3 oc = r.Origin() - center;
+    float a = dot(r.Direction(), r.Direction());
+    float b = 2.0 * dot(oc, r.Direction());
+    float c = dot(oc, oc) - radius * radius;
+    float discriminant = b * b - 4 * a * c;
+    return (discriminant > 0);
+}
+
+Color rayColor(const Ray& r)
+{
+    if (hitSphere(Point3(0.0f, 0.0f, -1.0f), 0.5f, r)) {
+        return Color(1.0f, 0.0f, 0.0f);
+    }
     Vec3 UnitDirection = UnitVector(r.Direction());
     float t = 0.5f * (UnitDirection.y() + 1.0f);
     return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
@@ -66,11 +79,11 @@ int main(int argc, char* argv[])
             float u = float(i) / float(width - 1);
             float v = float(j) / float(height - 1);
             Ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
-            Color col = RayColor(r);
+            Color col = rayColor(r);
             WriteColor(contentStream, col);
         }
     }
-    std::cout << "\r" << std::endl;
+    std::cout << std::endl;
 
     outContent = contentStream.str();
 
