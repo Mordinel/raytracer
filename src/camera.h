@@ -14,9 +14,9 @@ class Camera {
         {
             float vpHeight = 2.0f;
             float vpWidth = aspectRatio * vpHeight;
-            float focalLength = 1.0f;
+            float focalLength = 2.0f;
             
-            origin = Point3(0.0f, 0.0f, 0.0f);
+            origin = Point3(0.0f, 0.0f, 1.0f);
             horizontal = Vec3(vpWidth, 0.0f, 0.0f);
             vertical = Vec3(0.0f, vpHeight, 0.0f);
             lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - Vec3(0.0f, 0.0f, focalLength);
