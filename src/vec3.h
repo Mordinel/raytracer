@@ -139,14 +139,6 @@ inline Vec3 UnitVector(Vec3 v)
     return v / v.Length();
 }
 
-Vec3 RandomUnitVector()
-{
-    float a = RandomFloat(0.0f, 2.0f * pi);
-    float z = RandomFloat(-1.0f, 1.0f);
-    float r = std::sqrt(1.0f - z * z);
-    return Vec3(r * std::cos(a), r * std::sin(a), z);
-}
-
 Vec3 RandomInUnitSphere()
 {
     for (;;) {
@@ -155,6 +147,26 @@ Vec3 RandomInUnitSphere()
             continue;
         }
         return p;
+    }
+}
+
+// for lambertian diffusion
+Vec3 RandomUnitVector()
+{
+    float a = RandomFloat(0.0f, 2.0f * pi);
+    float z = RandomFloat(-1.0f, 1.0f);
+    float r = std::sqrt(1.0f - z * z);
+    return Vec3(r * std::cos(a), r * std::sin(a), z);
+}
+
+// for hemispherical diffusion
+Vec3 RandomInHemisphere(const Vec3& normal)
+{
+    Vec3 inUnitSphere = RandomInUnitSphere();
+    if (dot(inUnitSphere, normal) > 0.0f) {
+        return inUnitSphere;
+    } else {
+        return -inUnitSphere;
     }
 }
 
