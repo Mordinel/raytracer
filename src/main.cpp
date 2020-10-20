@@ -35,7 +35,7 @@ Color RayColor(const Ray& r, const Hittable& world, int depth)
         return Color(0.0f, 0.0f, 0.0f);
     }
     
-    if (world.Hit(r, 0, infinity, rec)) {
+    if (world.Hit(r, 0.001f, infinity, rec)) {
         Point3 target = rec.p + rec.normal + RandomInUnitSphere();
         return 0.5f * RayColor(Ray(rec.p, target - rec.p), world, depth - 1);
     }
@@ -60,9 +60,9 @@ int main(int argc, char* argv[])
 
     // image
     const float aspectRatio = 16.0f / 9.0f;
-    const int width = 800;
+    const int width = 1000;
     const int height = static_cast<int>(width / aspectRatio);
-    const int samplesPerPixel = 8;
+    const int samplesPerPixel = 16;
     const int maxDepth = 50;
 
     std::cout << "Resolution: " << width << "x" << height << std::endl;

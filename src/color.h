@@ -12,9 +12,9 @@ void WriteColor(std::ostream& os, Color pixelColor, int samplesPerPixel)
 
     float scale = 1.0f / samplesPerPixel;
 
-    r *= scale;
-    g *= scale;
-    b *= scale;
+    r = std::sqrt(scale * r);
+    g = std::sqrt(scale * g);
+    b = std::sqrt(scale * b);
 
     os << static_cast<int>(256 * Clamp(r, 0.0f, 0.999)) << " "
        << static_cast<int>(256 * Clamp(g, 0.0f, 0.999)) << " "
