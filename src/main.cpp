@@ -78,8 +78,8 @@ int main(int argc, char* argv[])
 
     auto mGround = std::make_shared<Lambertian>(Color(0.5f, 0.8f, 0.0f));
     auto mCenter = std::make_shared<Lambertian>(Color(0.7f, 0.2f, 0.7f));
-    auto mLeft = std::make_shared<Metal>(Color(0.7f, 0.7f, 0.7f));
-    auto mRight = std::make_shared<Metal>(Color(0.8f, 0.5f, 0.2f));
+    auto mLeft = std::make_shared<Metal>(Color(0.7f, 0.7f, 0.7f), 0.8f);
+    auto mRight = std::make_shared<Metal>(Color(0.8f, 0.5f, 0.2f), 0.1f);
 
     world.Add(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f, mGround));
     world.Add(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, mCenter));
