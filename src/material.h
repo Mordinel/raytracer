@@ -61,9 +61,21 @@ class Dielectric : public Material {
             float refractionRatio = rec.frontFace ? (1.0f / ir) : ir;
 
             Vec3 unitDirection = UnitVector(r_in.Direction());
-            Vec3 refracted = Refract(unitDirection, rec.normal, refractionRatio);
 
-            scattered = Ray(rec.p, refracted);
+            float cos_theta = std::fmin(dot(-unitDirection, rec.normal), 1.0f);
+            float sin_theta = std::sqrt(1.0f - cos_theta * cos_theta);
+
+            bool canRefract = refractionRatio * sin_theta <= 1.0f;
+
+            Vec3 direction;
+
+            if (canRefract) {
+                direction = Refract(unitDirection, rec.normal, refractionRatio);
+            } else {
+                direction = Reflect(unitDirection, rec.normal);
+            }
+
+            scattered = Ray(rec.p, direction);
             return true;
         }
 };
