@@ -175,4 +175,12 @@ Vec3 Reflect(const Vec3& v, const Vec3& n)
     return v - 2.0f * dot(v, n) * n;
 }
 
+Vec3 Refract(const Vec3& uv, const Vec3& n, float etai_over_etat)
+{
+    float cos_theta = dot(-uv, n);
+    Vec3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
+    Vec3 r_out_parallel = -std::sqrt(std::fabs(1.0f - r_out_perp.LengthSquared())) * n;
+    return r_out_perp + r_out_parallel;
+}
+
 #endif

@@ -47,4 +47,25 @@ class Metal : public Material {
         }
 };
 
+class Dielectric : public Material {
+    private:
+    
+    public:
+        float ir;
+
+        Dielectric(float index_of_refraction) : ir(index_of_refraction) {}
+
+        virtual bool Scatter(const Ray& r_in, const HitRecord& rec, Color& attenuation, Ray& scattered) const override
+        {
+            attenuation = Color(1.0f, 1.0f, 1.0f);
+            float refractionRatio = rec.frontFace ? (1.0f / ir) : ir;
+
+            Vec3 unitDirection = UnitVector(r_in.Direction());
+            Vec3 refracted = Refract(unitDirection, rec.normal, refractionRatio);
+
+            scattered = Ray(rec.p, refracted);
+            return true;
+        }
+};
+
 #endif
