@@ -6,9 +6,10 @@
 #include "rt.h"
 #include "ray.h"
 #include "color.h"
-#include "hittablelist.h"
 #include "sphere.h"
 #include "camera.h"
+#include "material.h"
+#include "hittablelist.h"
 
 /**
  * takes path and content strings,
@@ -36,8 +37,12 @@ Color RayColor(const Ray& r, const Hittable& world, int depth)
     }
     
     if (world.Hit(r, 0.001f, infinity, rec)) {
-        Point3 target = rec.p + rec.normal + RandomUnitVector();
-        return 0.5f * RayColor(Ray(rec.p, target - rec.p), world, depth - 1);
+        Ray scattered;
+        Color attenuation;
+        if (rec.mat_ptr->Scatter(r, rec, attenuation, scattered)) {
+            return attenuation * RayColor(scattered, world, depth - 1);
+        }
+        return Color(0.0f, 0.0f, 0.0f);
     }
 
     Vec3 UnitDirection = UnitVector(r.Direction());
@@ -60,7 +65,7 @@ int main(int argc, char* argv[])
 
     // image
     const float aspectRatio = 16.0f / 9.0f;
-    const int width = 1000;
+    const int width = 800;
     const int height = static_cast<int>(width / aspectRatio);
     const int samplesPerPixel = 16;
     const int maxDepth = 50;
@@ -68,9 +73,18 @@ int main(int argc, char* argv[])
     std::cout << "Resolution: " << width << "x" << height << std::endl;
     std::cout << "MSAA Per-Pixel Samples: " << samplesPerPixel << std::endl;
 
+    // world
     HittableList world;
-    world.Add(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f));
-    world.Add(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f));
+
+    auto mGround = std::make_shared<Lambertian>(Color(0.8f, 0.8f, 0.0f));
+    auto mCenter = std::make_shared<Lambertian>(Color(0.7f, 0.3f, 0.3f));
+    auto mLeft = std::make_shared<Metal>(Color(0.8f, 0.8f, 0.8f));
+    auto mRight = std::make_shared<Metal>(Color(0.8f, 0.6f, 0.2f));
+
+    world.Add(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f, mGround));
+    world.Add(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, mCenter));
+    world.Add(std::make_shared<Sphere>(Point3(-1.0f, 0.0f, -1.0f), 0.5f, mLeft));
+    world.Add(std::make_shared<Sphere>(Point3(1.0f, 0.0f, -1.0f), 0.5f, mRight));
 
     Camera cam(aspectRatio);
 

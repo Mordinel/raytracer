@@ -2,10 +2,14 @@
 #define HITTABLE_H
 
 #include "ray.h"
+#include "rt.h"
+
+class Material;
 
 struct HitRecord {
     Point3 p;
     Vec3 normal;
+    std::shared_ptr<Material> mat_ptr;
     float t;
     bool frontFace;
 

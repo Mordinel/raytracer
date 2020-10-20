@@ -1,15 +1,19 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include "hittable.h"
+#include "material.h"
+
 class Sphere : public Hittable {
     private:
 
     public:
         Point3 center;
         float radius;
+        std::shared_ptr<Material> mat_ptr;
 
         Sphere() {}
-        Sphere(Point3 cen, float r) : center(cen), radius(r) {};
+        Sphere(Point3 cen, float r, std::shared_ptr<Material> m) : center(cen), radius(r), mat_ptr(m) {};
 
         virtual bool Hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const override;
 };
@@ -31,6 +35,7 @@ bool Sphere::Hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const
             rec.p = r.At(rec.t);
             Vec3 outwardNormal = (rec.p - center) / radius;
             rec.setFaceNormal(r, outwardNormal);
+            rec.mat_ptr = mat_ptr;
             return true;
         }
 
@@ -40,6 +45,7 @@ bool Sphere::Hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const
             rec.p = r.At(rec.t);
             Vec3 outwardNormal = (rec.p - center) / radius;
             rec.setFaceNormal(r, outwardNormal);
+            rec.mat_ptr = mat_ptr;
             return true;
         }
     }
