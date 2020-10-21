@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     auto mLeft = std::make_shared<Dielectric>(2.5f);
     auto mRight = std::make_shared<Metal>(Color(0.7f, 0.7f, 0.7f), 0.02f);
 
-    world.Add(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f, mGround));
+    world.Add(std::make_shared<Sphere>(Point3(0.0f, -1000.5f, -1.0f), 1000.0f, mGround));
     world.Add(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, mCenter));
     world.Add(std::make_shared<Sphere>(Point3(-0.5f, -0.25f, -0.5f), 0.25f, mLeft));
     world.Add(std::make_shared<Sphere>(Point3(1.0f, 0.25f, -1.75f), 0.75f, mRight));
