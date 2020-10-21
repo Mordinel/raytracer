@@ -86,9 +86,9 @@ int main(int argc, char* argv[])
     world.Add(std::make_shared<Sphere>(Point3(-0.5f, -0.25f, -0.5f), 0.25f, mLeft));
     world.Add(std::make_shared<Sphere>(Point3(1.0f, 0.25f, -1.75f), 0.75f, mRight));
 
+    // camera
     Camera cam(aspectRatio);
 
-    // camera
     contentStream << "P3\n" << width << " " << height << "\n255\n";
 
     for (int j = height - 1; j >= 0; j--) {
